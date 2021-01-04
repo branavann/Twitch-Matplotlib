@@ -1,0 +1,59 @@
+/* This project begins with analysis of our dataset using SQL. We'll look for key insights regarding the popularity of specific games
+   and the composition of viewers (i.e. location) */
+   
+/* We'll begin by searching for the different games currently being streamed */   
+
+SELECT DISTINCT game
+FROM stream;
+
+/* Searching for different Twitch channels */
+
+SELECT DISTINCT channel
+FROM stream;
+
+/* Examining the most popular games */
+
+SELECT game, COUNT(*)
+FROM stream
+GROUP BY game
+ORDER BY COUNT(*) DESC;
+
+/* Demographic breakdown of League of Legend viewers */
+
+SELECT country, COUNT(*)
+FROM stream
+WHERE game = 'League of Legends'
+GROUP BY country
+ORDER BY COUNT(*) DESC;
+
+/* Breakdown of the source or media player viewers use to watch streams */
+
+SELECT player, COUNT(*)
+FROM stream
+GROUP BY 1
+ORDER BY 2 DESC;
+
+/* Classifying based on genre */
+
+SELECT game,
+  CASE
+    WHEN game = 'League of Legends' THEN 'MOBA'
+    WHEN game = 'Dota 2' THEN 'MOBA'
+    WHEN game = 'Heroes of the Storm' THEN 'MOBA'
+    WHEN game = 'Counter-Strike: Global Offensive' THEN 'FPS'
+    WHEN game = 'DayZ' THEN 'Survival'
+    WHEN game = 'ARK: Survival Evolved' THEN 'Survival'
+    ELSE 'Other'
+  END AS 'Genre',
+  COUNT(*)
+FROM stream
+GROUP BY 1
+ORDER BY 3 DESC;
+
+/* Analyzing viewing patterns in the US throughout the course of a day */
+
+SELECT strftime('%H', time) AS 'Hour', COUNT(*)
+FROM stream
+WHERE country = 'US'
+GROUP BY 1
+ORDER BY 2 DESC;
